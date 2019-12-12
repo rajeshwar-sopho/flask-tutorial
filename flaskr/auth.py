@@ -12,7 +12,7 @@ from flaskr.db import get_db
 # from name folder put '/auth' in front of everything related to this bp
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@bp.route('/register', method=('GET', 'POST'))
+@bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
         username = request.form['username']
@@ -43,7 +43,7 @@ def register():
 
     return render_template('auth/register.html')
 
-@bp.route('/login', method=('GET', 'POST'))
+@bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -53,7 +53,12 @@ def login():
         user = db.execute(
             'SELECT * FROM user WHERE username = ?',
             (username,)
-        )
+        ).fetchone()
+        print(type(user))
+        try:
+            print(user['password'])
+        except:
+            print(user.password)
 
         if not user:
             error = 'user does not exist.'
